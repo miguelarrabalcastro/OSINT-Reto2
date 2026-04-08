@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: novatech-app
+  namespace: production
+  labels:
+    app: novatech
+spec:
+  type: ClusterIP
+  selector:
+    app: novatech
+    component: backend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: novatech-db
+  namespace: production
+spec:
+  type: ClusterIP
+  selector:
+    app: novatech
+    component: db
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432

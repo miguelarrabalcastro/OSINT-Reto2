@@ -1,0 +1,60 @@
+version: '3.9'
+
+services:
+  app:
+    image: novatech/pulsetrack:latest
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - INTERNAL_API_KEY=${INTERNAL_API_KEY}
+    depends_on:
+      - db
+      - redis
+    networks:
+      - novatech-net
+
+  db:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - novatech-net
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    networks:
+      - novatech-net
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+    depends_on:
+      - app
+    networks:
+      - novatech-net
+
+volumes:
+  pgdata:
+
+networks:
+  novatech-net:
+    driver: bridge

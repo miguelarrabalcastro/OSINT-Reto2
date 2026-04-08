@@ -1,0 +1,27 @@
+# Entorno — NUNCA commitear
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+
+# Backups locales
+backups/
+*.sql.gz
+*.dump
+
+# Claves SSH
+*.pem
+*.key
+id_rsa*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
